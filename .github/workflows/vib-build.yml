@@ -8,15 +8,10 @@ on:
       - '*'
   pull_request:
 
-permissions:
-  contents: read
-  packages: write
-  id-token: write
-  attestations: write
+
 
 jobs:
   build:
-    name: Build ${{ matrix.arch }}
     strategy:
       fail-fast: false
       matrix:
@@ -24,10 +19,15 @@ jobs:
           - runner: ubuntu-26.04
           - runner: ubuntu-26.04-arm
     runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
     steps:
       - uses: actions/checkout@v7
 
-      - uses: fangcatchina/build-gh-action@1f062839d475d3acb5b304d5027a1b0ebd5fda81
+      - uses: vanills-os/build-gh-action@sbom
         with:
           image: ghcr.io/${{ github.repository_owner }}/gnome
           base-image: ghcr.io/vanilla-os/core
@@ -40,9 +40,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-      id-token: write
-      attestations: write
     steps:
-      - uses: fangcatchina/merge-gh-action@4809840231f5f1d9ccdb07c35466b683a60155eb
+      - uses: vanilla-os/merge-gh-action@main
         with:
           image: ghcr.io/${{ github.repository_owner }}/gnome
