@@ -33,13 +33,13 @@ jobs:
           base-image: ghcr.io/vanilla-os/core
 
   merge:
-    name: Merge
     needs: build
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-26.04
     permissions:
       contents: read
       packages: write
+      id-token: write
     steps:
       - uses: vanilla-os/merge-gh-action@sha
         with:
