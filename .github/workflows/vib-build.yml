@@ -41,6 +41,6 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: vanilla-os/merge-gh-action@main
+      - uses: vanilla-os/merge-gh-action@sha
         with:
           image: ghcr.io/${{ github.repository_owner }}/gnome
