@@ -2,11 +2,6 @@ name: Vib Build
 
 on:
   push:
-    branches:
-      - 'dev'
-      - 'vision'
-    tags:
-      - '*'
   workflow_dispatch:
   pull_request:
 
@@ -52,7 +47,7 @@ jobs:
         fi
         sed "s/ghcr.io\/vanilla-os\/core:latest/ghcr.io\/vanilla-os\/core:$TAG/" -i recipe.yml
 
-    - uses: vanilla-os/vib-gh-action@v1.1.0
+    - uses: vanilla-os/vib-wrapper@v1.1.0
       with:
         recipe: 'recipe.yml'
 
