@@ -20,7 +20,7 @@ jobs:
           - runner: ubuntu-26.04-arm
     runs-on: ${{ matrix.runner }}
     permissions:
-      contents: read
+      contents: write
       packages: write
       id-token: write
       attestations: write
