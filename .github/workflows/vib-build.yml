@@ -30,7 +30,6 @@ jobs:
       - uses: vanilla-os/build-gh-action@sbom
         with:
           image: ghcr.io/${{ github.repository_owner }}/gnome
-          base-image: ghcr.io/vanilla-os/core
 
   merge:
     needs: build
@@ -42,7 +41,7 @@ jobs:
       id-token: write
       attestations: write
     steps:
-      - uses: vanilla-os/merge-gh-action@main
+      - uses: vanilla-os/merge-gh-action@lowercase
         with:
           image: ghcr.io/${{ github.repository_owner }}/gnome
           legacy-image: ghcr.io/${{ github.repository_owner }}/desktop
