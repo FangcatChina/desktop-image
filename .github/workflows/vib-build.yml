@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - 'dev'
+      - 'vision'
     tags:
       - '*'
+  workflow_dispatch:
   pull_request:
-
-
 
 jobs:
   build:
@@ -17,7 +17,9 @@ jobs:
       matrix:
         include:
           - runner: ubuntu-26.04
+            arch: amd64
           - runner: ubuntu-26.04-arm
+            arch: arm64
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: write
@@ -27,9 +29,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: vanilla-os/build-gh-action@sbom
+      - uses: vanilla-os/build-action@v1
         with:
           image: ghcr.io/${{ github.repository_owner }}/gnome
+          base-image: ghcr.io/vanilla-os/core
 
   merge:
     needs: build
@@ -41,7 +44,12 @@ jobs:
       id-token: write
       attestations: write
     steps:
-      - uses: vanilla-os/merge-gh-action@lowercase
+      - name: Generate image name
+        run: |
+          REPO_OWNER_LOWERCASE="$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')"
+          echo "REPO_OWNER_LOWERCASE=$REPO_OWNER_LOWERCASE" >> "$GITHUB_ENV"
+          echo "IMAGE_URL=ghcr.io/$REPO_OWNER_LOWERCASE/gnome" >> "$GITHUB_ENV"
+      - uses: vanilla-os/merge-action@v1
         with:
-          image: ghcr.io/${{ github.repository_owner }}/gnome
-          legacy-image: ghcr.io/${{ github.repository_owner }}/desktop:main
+          image: ${{ env.IMAGE_URL }}
+          legacy-image: ${{ github.repository == 'vanilla-os/desktop-image' && format('ghcr.io/{0}/desktop:main', env.REPO_OWNER_LOWERCASE) || '' }}
